@@ -8,6 +8,10 @@ def emotionDetector():
     query = request.args['text']
     data = emotion_detector(query)
 
+    # Could also check contents of 'query' above for 0-length
+    if data['dominant_emotion'] is None:
+        return "Invalid text! Please Try Again!", 400 # Instructions did not specify code
+
     def format_emot(name, data):
         return f"'{name}': {data[name]}"
 
