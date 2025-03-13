@@ -1,10 +1,14 @@
+"""Module implements a simple server for sending text to embedded AI."""
+
 from flask import Flask, request
 from EmotionDetection.emotion_detection import emotion_detector
 
 app = Flask(__name__)
 
 @app.route('/emotionDetector')
-def emotionDetector():
+def emotion_detector_route():
+    """Support GET request by forwarding 'text' query param to embedded AI"""
+
     query = request.args['text']
     data = emotion_detector(query)
 
@@ -15,12 +19,13 @@ def emotionDetector():
     def format_emot(name, data):
         return f"'{name}': {data[name]}"
 
-    message = f"For the given statement, the system response is " + \
+    message = "For the given statement, the system response is " + \
               format_emot('anger', data) + ", " + \
               format_emot('disgust', data) + ", " + \
               format_emot('fear', data) + ", " + \
               format_emot('joy', data) + ", " + \
-              format_emot('sadness', data) + f". The dominant emotion is {data['dominant_emotion']}.\n"
+              format_emot('sadness', data) + \
+              f". The dominant emotion is {data['dominant_emotion']}.\n"
 
     return message, 200
 
